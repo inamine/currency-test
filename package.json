@@ -2,7 +2,7 @@
   "name": "currency-test",
   "version": "1.0.0",
   "description": "Admission Test - a currency converter by Renato Inamine",
-  "main": "src/index.js",
+  "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,5 +19,9 @@
   "bugs": {
     "url": "https://github.com/inamine/currency-test/issues"
   },
-  "homepage": "https://github.com/inamine/currency-test#readme"
+  "homepage": "https://github.com/inamine/currency-test#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.0"
+  }
 }
