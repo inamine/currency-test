@@ -1,25 +1,46 @@
-const fetch = require('node-fetch')
-const EXCHANGE_URL = 'https://api.exchangeratesapi.io/latest?base=USD'
-let rates
+const express = require('express')
+
+const requestValidation = require('./validation')
+const convert = require('./calc')
+
+const port = process.env.PORT || 3000
+const app = express()
+
+app.use(express.static('public'))
+
+app.get('/', (req, res) => {
+
+    let { hasErrors, message } = requestValidation(req)
+
+    if (hasErrors) {
+        res.status(400)
+        return res.send({ error: message })
+    }
+
+    let from = req.query.from.toUpperCase()
+    let to = req.query.to.toUpperCase()
+    let value = req.query.value.replace(/,/gi, '.')
+
+    convert(from, to, value)
+        .then(({ ratio, converted }) => {
+
+            let initalValue = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: from }).format(value);
+            let convertedValue = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: to }).format(converted);
+
+            res.send({
+                from, to, initalValue, convertedValue, ratio
+            })
+        })
 
 
+})
 
-const getData = () => {
-    fetch(EXCHANGE_URL)
-    .then(res => res.json())
-    .then(json => {
-        console.log(typeof json)
-        rates = json.rates
-        convert('EUR', 'BRL', 50)
-    }); 
-}
+// Handle 404
+app.use((req, res, next) => {
+    res.status(404)
+    res.send('404: File Not Found')
+})
 
-const convert = (cFrom, cTo, cValue) => {
-    let ratio = (1/rates[cFrom]) * rates[cTo] // here i get a ratio currency using USD as base.
-    let value = ratio * cValue;
-    console.log( `Ratio for ${cFrom}: ${ratio}` );
-    console.log(value)
-    console.log(new Intl.NumberFormat('pt-BR', { style: 'currency', currency: cTo }).format(value));
-}
-
-getData();
+app.listen(port, () => {
+    console.log('Server is up on port ' + port)
+})
