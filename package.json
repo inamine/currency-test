@@ -1,0 +1,23 @@
+{
+  "name": "currency-test",
+  "version": "1.0.0",
+  "description": "Admission Test - a currency converter by Renato Inamine",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/inamine/currency-test.git"
+  },
+  "keywords": [
+    "currency",
+    "nodejs"
+  ],
+  "author": "Renato Inamine",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/inamine/currency-test/issues"
+  },
+  "homepage": "https://github.com/inamine/currency-test#readme"
+}
