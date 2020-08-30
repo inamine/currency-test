@@ -1,27 +1,34 @@
-const CURRENCIES = ["CAD", "HKD", "ISK", "PHP", "DKK", "HUF", "CZK", "GBP", "RON", "SEK", "IDR", "INR", "BRL", "RUB", "HRK", "JPY", "THB", "CHF", "EUR", "MYR", "BGN", "TRY", "CNY", "NOK", "NZD", "ZAR", "USD", "MXN", "SGD", "AUD", "ILS", "KRW", "PLN"]
+const CURRENCIES = ['AUD', 'BGN', 'BRL', 'CAD', 'CHF', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'ISK', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RON', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'USD', 'ZAR']
 
 const requestValidation = (req) => {
     let hasErrors = false
     let message = ''
+    let {query:{from = '', to = '', value = '', user = ''}} = req
 
-    if (!req.query.from) {
+    if (!from) {
         hasErrors = true
         message = 'You must provide a value for from'
-    } else if (!req.query.to) {
+    } else if (!to) {
         hasErrors = true
         message = 'You must provide a value for to'
-    } else if (!req.query.value) {
+    } else if (!value) {
         hasErrors = true
         message = 'You must provide a value to convert'
-    } else if (isNaN(req.query.value.replace(/,/gi, '.'))) {
+    } else if (!user) {
         hasErrors = true
-        message = `You must provide a valid value to convert: ${req.query.value}`
-    } else if (!CURRENCIES.includes(req.query.from.toUpperCase())) {
+        message = 'You must provide a user to use this API'
+    } else if (user.length != 4 || !user.match(/\d{4}/)) {
         hasErrors = true
-        message = `invalid code for from: ${req.query.from}`
-    } else if (!CURRENCIES.includes(req.query.to.toUpperCase())) {
+        message = 'The User ID must have 4 digits'
+    } else if (isNaN(value.replace(/,/gi, '.'))) {
         hasErrors = true
-        message = ` invalid code for to: ${req.query.to}`
+        message = `You must provide a valid value to convert: ${value}`
+    } else if (!CURRENCIES.includes(from.toUpperCase())) {
+        hasErrors = true
+        message = `invalid code for from: ${from}`
+    } else if (!CURRENCIES.includes(to.toUpperCase())) {
+        hasErrors = true
+        message = ` invalid code for to: ${to}`
     }
 
     return { hasErrors, message }

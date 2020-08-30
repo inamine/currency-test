@@ -17,9 +17,11 @@ app.get('/', (req, res) => {
         return res.send({ error: message })
     }
 
-    let from = req.query.from.toUpperCase()
-    let to = req.query.to.toUpperCase()
-    let value = req.query.value.replace(/,/gi, '.')
+    let {query:{from, to, value, user}} = req
+    from = from.toUpperCase()
+    to = to.toUpperCase()
+    value = value.replace(/,/gi, '.')
+    
 
     convert(from, to, value)
         .then(({ ratio, converted }) => {
@@ -28,7 +30,7 @@ app.get('/', (req, res) => {
             let convertedValue = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: to }).format(converted);
 
             res.send({
-                from, to, initalValue, convertedValue, ratio
+                from, to, initalValue, convertedValue, ratio, user
             })
         })
 
