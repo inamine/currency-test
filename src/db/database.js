@@ -51,10 +51,7 @@ const Log = mongoose.model('Log', {
   },
   user: {
     type: String,
-    required: true,
-    validate(value) {
-      // validar o user para 4 digitos
-    }
+    required: true
   },
   date: {
     type: Date,
@@ -62,21 +59,37 @@ const Log = mongoose.model('Log', {
   }
 })
 
-const registerLog = (logObj) => {
-  return new Promise((resolve, reject) => {
-    if (!isConnected) {
-      return reject(new Error('DB not connected'))
-    }
-    const currentLog = new Log(logObj)
-    currentLog.save()
-      .then(() => {
-        console.log('Log Registered')
-        resolve()
+const database = {
+  readLog: () => {
+    return new Promise((resolve, reject) => {
+      if (!isConnected) {
+        return reject(new Error('DB not connected'))
+      }
+
+      Log.find({ }).then((data) => {
+        resolve(data)
       }).catch((error) => {
-        console.log('RegisterLog Error:', error)
+        console.log('Error reading log')
         reject(error)
       })
-  })
+    })
+  },
+  registerLog: (logObj) => {
+    return new Promise((resolve, reject) => {
+      if (!isConnected) {
+        return reject(new Error('DB not connected'))
+      }
+      const currentLog = new Log(logObj)
+      currentLog.save()
+        .then(() => {
+          console.log('Log Registered')
+          resolve()
+        }).catch((error) => {
+          console.log('RegisterLog Error:', error)
+          reject(error)
+        })
+    })
+  }
 }
 
-module.exports = registerLog
+module.exports = database

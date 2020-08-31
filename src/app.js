@@ -1,6 +1,6 @@
 const express = require('express')
 
-const registerLog = require('./db/database')
+const database = require('./db/database')
 const requestValidation = require('./validation')
 const convert = require('./calc')
 
@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
       const initalValue = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: from }).format(value)
       const convertedValue = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: to }).format(converted)
 
-      registerLog({ from, to, initalValue, convertedValue, ratio, user, date }).then(() => {
+      database.registerLog({ from, to, initalValue, convertedValue, ratio, user, date }).then(() => {
         res.send({
           from, to, initalValue, convertedValue, ratio, user, date: date.toUTCString()
         })
@@ -38,6 +38,12 @@ app.get('/', (req, res) => {
         return res.send({ error: error })
       })
     })
+})
+
+app.get('/logs', (req, res) => {
+  database.readLog().then((data) => {
+    return res.send(data)
+  })
 })
 
 // Handle 404
