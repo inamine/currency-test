@@ -8,7 +8,7 @@ const options = {
 }
 let isConnected = false
 
-mongoose.connect('mongodb://127.0.0.1:27017/currency', options)
+mongoose.connect(process.env.MONGODB_URL, options)
 
 const db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'));

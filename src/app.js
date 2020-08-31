@@ -4,7 +4,7 @@ const registerLog = require('./db/database')
 const requestValidation = require('./validation')
 const convert = require('./calc')
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT
 const app = express()
 
 app.use(express.static('public'))
