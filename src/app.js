@@ -1,6 +1,7 @@
 const express = require('express')
 
-const requestValidation = require('./validation').default
+const registerLog = require('./db/database')
+const requestValidation = require('./validation')
 const convert = require('./calc')
 
 const port = process.env.PORT || 3000
@@ -20,14 +21,21 @@ app.get('/', (req, res) => {
   from = from.toUpperCase()
   to = to.toUpperCase()
   value = value.replace(/,/gi, '.')
+  const date = new Date()
 
   convert(from, to, value)
     .then(({ ratio, converted }) => {
       const initalValue = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: from }).format(value)
       const convertedValue = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: to }).format(converted)
 
-      res.send({
-        from, to, initalValue, convertedValue, ratio, user
+      registerLog({ from, to, initalValue, convertedValue, ratio, user, date }).then(() => {
+        res.send({
+          from, to, initalValue, convertedValue, ratio, user, date: date.toUTCString()
+        })
+      }).catch((error) => {
+        console.log('APP Error:', error)
+        res.status(400)
+        return res.send({ error: error })
       })
     })
 })

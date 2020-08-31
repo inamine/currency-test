@@ -1,4 +1,4 @@
-const CURRENCIES = ['AUD', 'BGN', 'BRL', 'CAD', 'CHF', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'ISK', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RON', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'USD', 'ZAR']
+const currencyCodes = require('./data/currency-codes')
 
 const requestValidation = (req) => {
   let hasErrors = false
@@ -23,10 +23,10 @@ const requestValidation = (req) => {
   } else if (isNaN(value.replace(/,/gi, '.'))) {
     hasErrors = true
     message = `You must provide a valid value to convert: ${value}`
-  } else if (!CURRENCIES.includes(from.toUpperCase())) {
+  } else if (!currencyCodes.includes(from.toUpperCase())) {
     hasErrors = true
     message = `invalid code for from: ${from}`
-  } else if (!CURRENCIES.includes(to.toUpperCase())) {
+  } else if (!currencyCodes.includes(to.toUpperCase())) {
     hasErrors = true
     message = ` invalid code for to: ${to}`
   }
@@ -34,4 +34,4 @@ const requestValidation = (req) => {
   return { hasErrors, message }
 }
 
-export default requestValidation
+module.exports = requestValidation
